@@ -42,6 +42,7 @@
   .ex-name { font-size: 14px; font-weight: 500; color: #f0f4ff; }
   .ex-target { font-size: 12px; color: #38bdf8; white-space: nowrap; }
   .ex-note-txt { font-size: 12px; color: rgba(240,244,255,0.38); margin-bottom: 8px; line-height: 1.5; }
+  .superset-tag { display: inline-block; font-size: 10px; background: rgba(251,146,60,0.15); border: 0.5px solid rgba(251,146,60,0.3); color: #fb923c; border-radius: 4px; padding: 2px 6px; margin-bottom: 6px; }
   .vid-btn { display: inline-flex; align-items: center; gap: 4px; background: rgba(239,68,68,0.12); border: 0.5px solid rgba(239,68,68,0.3); border-radius: 6px; padding: 4px 8px; font-size: 11px; color: #f87171; cursor: pointer; white-space: nowrap; text-decoration: none; flex-shrink: 0; }
   .vid-btn i { font-size: 13px; }
   .sets-header { display: grid; grid-template-columns: 24px 1fr 1fr 30px; gap: 6px; align-items: center; margin-bottom: 4px; }
@@ -155,12 +156,60 @@
     <div class="today-card"><div class="today-head"><div><div class="today-label">Today</div><div class="today-title" id="today-title">—</div></div><div class="today-meta" id="today-meta"></div></div></div>
     <div class="section">
       <div class="section-title">Weekly Schedule</div>
-      <div class="day-card" id="day-mon"><div class="day-head" onclick="toggleDay('day-mon')"><span class="day-badge d-mon">Mon</span><div><div class="day-name">Heavy Legs + Plyometrics</div><div class="day-sub">7 exercises · ~60 min</div></div><i class="ti ti-chevron-down day-chevron" aria-hidden="true"></i></div><div class="day-body"><div class="warmup-box"><div class="warmup-title">Warm-up first</div><ul class="warmup-list"><li>5 min bike (easy)</li><li>Leg swings × 10 each direction</li><li>Bodyweight squats × 10</li><li>Inchworms × 5</li></ul></div><div id="mon-exercises"></div><div class="timer-row"><button class="timer-btn" onclick="startTimer('mon',90)"><i class="ti ti-player-play" aria-hidden="true"></i> 90s</button><button class="timer-btn" onclick="startTimer('mon',120)"><i class="ti ti-player-play" aria-hidden="true"></i> 2 min</button><div class="timer-display" id="timer-mon">—</div></div><div class="day-note">⏱ 90 sec after plyo sets · 2 min after heavy strength sets</div></div></div>
-      <div class="day-card" id="day-tue"><div class="day-head" onclick="toggleDay('day-tue')"><span class="day-badge d-tue">Tue</span><div><div class="day-name">Upper Body + Core</div><div class="day-sub">8 exercises · ~50 min</div></div><i class="ti ti-chevron-down day-chevron" aria-hidden="true"></i></div><div class="day-body"><div id="tue-exercises"></div><div class="timer-row"><button class="timer-btn" onclick="startTimer('tue',60)"><i class="ti ti-player-play" aria-hidden="true"></i> 60s</button><div class="timer-display" id="timer-tue">—</div></div><div class="day-note">⏱ 60 sec between sets</div></div></div>
-      <div class="day-card" id="day-wed"><div class="day-head" onclick="toggleDay('day-wed')"><span class="day-badge d-wed">Wed</span><div><div class="day-name">Legs + Power</div><div class="day-sub">7 exercises · ~55 min</div></div><i class="ti ti-chevron-down day-chevron" aria-hidden="true"></i></div><div class="day-body"><div id="wed-exercises"></div><div class="timer-row"><button class="timer-btn" onclick="startTimer('wed',90)"><i class="ti ti-player-play" aria-hidden="true"></i> 90s</button><button class="timer-btn" onclick="startTimer('wed',120)"><i class="ti ti-player-play" aria-hidden="true"></i> 2 min</button><div class="timer-display" id="timer-wed">—</div></div></div></div>
-      <div class="day-card" id="day-thu"><div class="day-head" onclick="toggleDay('day-thu')"><span class="day-badge d-tue">Thu</span><div><div class="day-name">Upper Body + Grip</div><div class="day-sub">8 exercises · ~50 min</div></div><i class="ti ti-chevron-down day-chevron" aria-hidden="true"></i></div><div class="day-body"><div id="thu-exercises"></div><div class="timer-row"><button class="timer-btn" onclick="startTimer('thu',60)"><i class="ti ti-player-play" aria-hidden="true"></i> 60s</button><div class="timer-display" id="timer-thu">—</div></div><div class="day-note">⏱ Legs fully resting today</div></div></div>
-      <div class="day-card" id="day-fri"><div class="day-head" onclick="toggleDay('day-fri')"><span class="day-badge d-fri">Fri</span><div><div class="day-name">Sprint Training</div><div class="day-sub">Team session · show up fresh</div></div><i class="ti ti-chevron-down day-chevron" aria-hidden="true"></i></div><div class="day-body"><div class="rest-note">Mon → Wed → Fri spacing — arrives fully recovered.</div><div class="warmup-box" style="margin-top:12px;"><div class="warmup-title">Sprint day reminders</div><ul class="warmup-list"><li>Eat a good meal 2–3 hrs before</li><li>Hydrate from morning</li><li>Dynamic warm-up before drills</li><li>Static stretching after</li></ul></div></div></div>
-      <div class="day-card" id="day-sat"><div class="day-head" onclick="toggleDay('day-sat')"><span class="day-badge d-sat">Sat</span><div><div class="day-name">Optional Upper Body</div><div class="day-sub">Only if feeling good</div></div><i class="ti ti-chevron-down day-chevron" aria-hidden="true"></i></div><div class="day-body"><div id="sat-exercises"></div><div class="day-note">If dragging after Friday, rest wins.</div></div></div>
+
+      <div class="day-card" id="day-mon">
+        <div class="day-head" onclick="toggleDay('day-mon')"><span class="day-badge d-mon">Mon</span><div><div class="day-name">Heavy Legs + Plyometrics</div><div class="day-sub" id="sub-mon"></div></div><i class="ti ti-chevron-down day-chevron"></i></div>
+        <div class="day-body">
+          <div class="warmup-box"><div class="warmup-title">Warm-up first</div><ul class="warmup-list"><li>5 min bike (easy)</li><li>Leg swings × 10 each direction</li><li>Bodyweight squats × 10</li><li>Inchworms × 5</li></ul></div>
+          <div id="mon-exercises"></div>
+          <div class="timer-row"><button class="timer-btn" onclick="startTimer('mon',90)"><i class="ti ti-player-play"></i> 90s</button><button class="timer-btn" onclick="startTimer('mon',120)"><i class="ti ti-player-play"></i> 2 min</button><div class="timer-display" id="timer-mon">—</div></div>
+          <div class="day-note">⏱ 90s after plyo sets · 2 min after heavy sets · 🔁 Bulgarian + Plyo = no rest between A+B</div>
+        </div>
+      </div>
+
+      <div class="day-card" id="day-tue">
+        <div class="day-head" onclick="toggleDay('day-tue')"><span class="day-badge d-tue">Tue</span><div><div class="day-name">Upper Body + Chest + Shoulders</div><div class="day-sub" id="sub-tue"></div></div><i class="ti ti-chevron-down day-chevron"></i></div>
+        <div class="day-body">
+          <div id="tue-exercises"></div>
+          <div class="timer-row"><button class="timer-btn" onclick="startTimer('tue',60)"><i class="ti ti-player-play"></i> 60s</button><button class="timer-btn" onclick="startTimer('tue',90)"><i class="ti ti-player-play"></i> 90s</button><div class="timer-display" id="timer-tue">—</div></div>
+          <div class="day-note">⏱ 60s between sets · 90s after pressing movements</div>
+        </div>
+      </div>
+
+      <div class="day-card" id="day-wed">
+        <div class="day-head" onclick="toggleDay('day-wed')"><span class="day-badge d-wed">Wed</span><div><div class="day-name">Legs + Power</div><div class="day-sub" id="sub-wed"></div></div><i class="ti ti-chevron-down day-chevron"></i></div>
+        <div class="day-body">
+          <div id="wed-exercises"></div>
+          <div class="timer-row"><button class="timer-btn" onclick="startTimer('wed',90)"><i class="ti ti-player-play"></i> 90s</button><button class="timer-btn" onclick="startTimer('wed',120)"><i class="ti ti-player-play"></i> 2 min</button><div class="timer-display" id="timer-wed">—</div></div>
+          <div class="day-note">🔁 Bulgarian + Plyo = no rest between A+B</div>
+        </div>
+      </div>
+
+      <div class="day-card" id="day-thu">
+        <div class="day-head" onclick="toggleDay('day-thu')"><span class="day-badge d-tue">Thu</span><div><div class="day-name">Upper Body + Shoulders + Forearms</div><div class="day-sub" id="sub-thu"></div></div><i class="ti ti-chevron-down day-chevron"></i></div>
+        <div class="day-body">
+          <div id="thu-exercises"></div>
+          <div class="timer-row"><button class="timer-btn" onclick="startTimer('thu',60)"><i class="ti ti-player-play"></i> 60s</button><button class="timer-btn" onclick="startTimer('thu',90)"><i class="ti ti-player-play"></i> 90s</button><div class="timer-display" id="timer-thu">—</div></div>
+          <div class="day-note">⏱ 60s between sets · Forearm circuit at end — minimal rest</div>
+        </div>
+      </div>
+
+      <div class="day-card" id="day-fri">
+        <div class="day-head" onclick="toggleDay('day-fri')"><span class="day-badge d-fri">Fri</span><div><div class="day-name">Sprint Training</div><div class="day-sub">Team session · show up fresh</div></div><i class="ti ti-chevron-down day-chevron"></i></div>
+        <div class="day-body">
+          <div class="rest-note">Mon → Wed → Fri spacing — arrives fully recovered.</div>
+          <div class="warmup-box" style="margin-top:12px;"><div class="warmup-title">Sprint day reminders</div><ul class="warmup-list"><li>Eat a good meal 2–3 hrs before</li><li>Hydrate from morning</li><li>Dynamic warm-up before drills</li><li>Static stretching after</li></ul></div>
+        </div>
+      </div>
+
+      <div class="day-card" id="day-sat">
+        <div class="day-head" onclick="toggleDay('day-sat')"><span class="day-badge d-sat">Sat</span><div><div class="day-name">Optional Upper Body</div><div class="day-sub" id="sub-sat"></div></div><i class="ti ti-chevron-down day-chevron"></i></div>
+        <div class="day-body">
+          <div id="sat-exercises"></div>
+          <div class="day-note">If dragging after Friday, rest wins.</div>
+        </div>
+      </div>
+
       <div class="day-card"><div class="day-head"><span class="day-badge d-sun">Sun</span><div><div class="day-name">Rest + Recovery</div><div class="day-sub">Stretch · sleep · eat well</div></div></div></div>
     </div>
   </div>
@@ -179,9 +228,9 @@
       <div class="section-title">Tuesday vs Thursday</div>
       <div class="vs-card">
         <div class="vs-header">
-          <div class="vs-side"><div class="vs-day-label" style="color:#a78bfa">Tuesday</div><div class="vs-pct-big" id="vs-tue-pct" style="color:#a78bfa">—</div><div style="font-size:11px;color:rgba(240,244,255,0.35);margin-top:2px;">upper + core</div></div>
+          <div class="vs-side"><div class="vs-day-label" style="color:#a78bfa">Tuesday</div><div class="vs-pct-big" id="vs-tue-pct" style="color:#a78bfa">—</div><div style="font-size:11px;color:rgba(240,244,255,0.35);margin-top:2px;">chest + shoulders</div></div>
           <div class="vs-divider">vs</div>
-          <div class="vs-side"><div class="vs-day-label" style="color:#38bdf8">Thursday</div><div class="vs-pct-big" id="vs-thu-pct" style="color:#38bdf8">—</div><div style="font-size:11px;color:rgba(240,244,255,0.35);margin-top:2px;">upper + grip</div></div>
+          <div class="vs-side"><div class="vs-day-label" style="color:#38bdf8">Thursday</div><div class="vs-pct-big" id="vs-thu-pct" style="color:#38bdf8">—</div><div style="font-size:11px;color:rgba(240,244,255,0.35);margin-top:2px;">shoulders + forearms</div></div>
         </div>
         <div class="vs-bar-wrap"><div class="vs-bar-tue" id="vs-bar-tue" style="width:0%"></div><div class="vs-bar-thu" id="vs-bar-thu" style="width:0%"></div></div>
         <div class="vs-stat-row"><span id="vs-tue-sessions">0 sessions</span><span id="vs-thu-sessions">0 sessions</span></div>
@@ -206,64 +255,243 @@
     <div class="section" style="padding-top:16px;">
       <div class="macro-grid"><div class="macro-card"><div class="macro-num m-cal">3,200</div><div class="macro-label">Calories</div><div class="macro-unit">daily target</div></div><div class="macro-card"><div class="macro-num m-pro">160g</div><div class="macro-label">Protein</div><div class="macro-unit">minimum</div></div><div class="macro-card"><div class="macro-num m-carb">400g</div><div class="macro-label">Carbs</div><div class="macro-unit">fuel</div></div></div>
       <div class="section-title">Daily Meals</div>
-      <div class="meal-card" id="meal-1"><div class="meal-head" onclick="toggleMeal('meal-1')"><div class="meal-icon">🌅</div><div><div class="meal-title">Breakfast</div><div class="meal-time">7:00 – 8:00 AM</div></div><i class="ti ti-chevron-down day-chevron" aria-hidden="true"></i></div><div class="meal-body"><div class="food-item"><span class="food-name">3–4 eggs</span><span class="food-pro">~25g protein</span></div><div class="food-item"><span class="food-name">Oatmeal with banana</span><span class="food-pro">~60g carbs</span></div><div class="food-item"><span class="food-name">Glass of milk</span><span class="food-pro">~8g protein</span></div><div class="food-item"><span class="food-name">Toast with peanut butter</span><span class="food-pro">~10g protein</span></div></div></div>
-      <div class="meal-card" id="meal-2"><div class="meal-head" onclick="toggleMeal('meal-2')"><div class="meal-icon">⚡</div><div><div class="meal-title">Post-Workout</div><div class="meal-time">Within 30 min</div></div><i class="ti ti-chevron-down day-chevron" aria-hidden="true"></i></div><div class="meal-body"><div class="food-item"><span class="food-name">Protein shake</span><span class="food-pro">~30g protein</span></div><div class="food-item"><span class="food-name">Banana or fruit</span><span class="food-pro">fast carbs</span></div><div class="food-item"><span class="food-name">Greek yogurt</span><span class="food-pro">~15g protein</span></div></div></div>
-      <div class="meal-card" id="meal-3"><div class="meal-head" onclick="toggleMeal('meal-3')"><div class="meal-icon">🥩</div><div><div class="meal-title">Lunch</div><div class="meal-time">12:00 – 1:00 PM</div></div><i class="ti ti-chevron-down day-chevron" aria-hidden="true"></i></div><div class="meal-body"><div class="food-item"><span class="food-name">Chicken or ground beef</span><span class="food-pro">~40g protein</span></div><div class="food-item"><span class="food-name">Rice or pasta</span><span class="food-pro">~80g carbs</span></div><div class="food-item"><span class="food-name">Vegetables</span><span class="food-pro">fiber + vitamins</span></div></div></div>
-      <div class="meal-card" id="meal-4"><div class="meal-head" onclick="toggleMeal('meal-4')"><div class="meal-icon">🍎</div><div><div class="meal-title">Afternoon Snack</div><div class="meal-time">3:00 – 4:00 PM</div></div><i class="ti ti-chevron-down day-chevron" aria-hidden="true"></i></div><div class="meal-body"><div class="food-item"><span class="food-name">Cottage cheese + fruit</span><span class="food-pro">~20g protein</span></div><div class="food-item"><span class="food-name">Handful of nuts</span><span class="food-pro">healthy fats</span></div></div></div>
-      <div class="meal-card" id="meal-5"><div class="meal-head" onclick="toggleMeal('meal-5')"><div class="meal-icon">🍽️</div><div><div class="meal-title">Dinner</div><div class="meal-time">6:00 – 7:00 PM</div></div><i class="ti ti-chevron-down day-chevron" aria-hidden="true"></i></div><div class="meal-body"><div class="food-item"><span class="food-name">Salmon, steak, or chicken</span><span class="food-pro">~40g protein</span></div><div class="food-item"><span class="food-name">Sweet potato or rice</span><span class="food-pro">~50g carbs</span></div><div class="food-item"><span class="food-name">Salad or roasted veg</span><span class="food-pro">micronutrients</span></div><div class="food-item"><span class="food-name">Glass of milk</span><span class="food-pro">~8g protein</span></div></div></div>
-      <div class="meal-card" id="meal-6"><div class="meal-head" onclick="toggleMeal('meal-6')"><div class="meal-icon">🌙</div><div><div class="meal-title">Before Bed</div><div class="meal-time">9:00 – 10:00 PM</div></div><i class="ti ti-chevron-down day-chevron" aria-hidden="true"></i></div><div class="meal-body"><div class="food-item"><span class="food-name">Greek yogurt or cottage cheese</span><span class="food-pro">~20g protein</span></div><div class="food-item"><span class="food-name">Glass of milk</span><span class="food-pro">casein protein</span></div><div style="margin-top:10px;font-size:12px;color:rgba(240,244,255,0.4);line-height:1.6;">Casein digests slowly overnight — feeds muscle repair while he sleeps.</div></div></div>
+      <div class="meal-card" id="meal-1"><div class="meal-head" onclick="toggleMeal('meal-1')"><div class="meal-icon">🌅</div><div><div class="meal-title">Breakfast</div><div class="meal-time">7:00 – 8:00 AM</div></div><i class="ti ti-chevron-down day-chevron"></i></div><div class="meal-body"><div class="food-item"><span class="food-name">3–4 eggs</span><span class="food-pro">~25g protein</span></div><div class="food-item"><span class="food-name">Oatmeal with banana</span><span class="food-pro">~60g carbs</span></div><div class="food-item"><span class="food-name">Glass of milk</span><span class="food-pro">~8g protein</span></div><div class="food-item"><span class="food-name">Toast with peanut butter</span><span class="food-pro">~10g protein</span></div></div></div>
+      <div class="meal-card" id="meal-2"><div class="meal-head" onclick="toggleMeal('meal-2')"><div class="meal-icon">⚡</div><div><div class="meal-title">Post-Workout</div><div class="meal-time">Within 30 min</div></div><i class="ti ti-chevron-down day-chevron"></i></div><div class="meal-body"><div class="food-item"><span class="food-name">Protein shake</span><span class="food-pro">~30g protein</span></div><div class="food-item"><span class="food-name">Banana or fruit</span><span class="food-pro">fast carbs</span></div><div class="food-item"><span class="food-name">Greek yogurt</span><span class="food-pro">~15g protein</span></div></div></div>
+      <div class="meal-card" id="meal-3"><div class="meal-head" onclick="toggleMeal('meal-3')"><div class="meal-icon">🥩</div><div><div class="meal-title">Lunch</div><div class="meal-time">12:00 – 1:00 PM</div></div><i class="ti ti-chevron-down day-chevron"></i></div><div class="meal-body"><div class="food-item"><span class="food-name">Chicken or ground beef</span><span class="food-pro">~40g protein</span></div><div class="food-item"><span class="food-name">Rice or pasta</span><span class="food-pro">~80g carbs</span></div><div class="food-item"><span class="food-name">Vegetables</span><span class="food-pro">fiber + vitamins</span></div></div></div>
+      <div class="meal-card" id="meal-4"><div class="meal-head" onclick="toggleMeal('meal-4')"><div class="meal-icon">🍎</div><div><div class="meal-title">Afternoon Snack</div><div class="meal-time">3:00 – 4:00 PM</div></div><i class="ti ti-chevron-down day-chevron"></i></div><div class="meal-body"><div class="food-item"><span class="food-name">Cottage cheese + fruit</span><span class="food-pro">~20g protein</span></div><div class="food-item"><span class="food-name">Handful of nuts</span><span class="food-pro">healthy fats</span></div></div></div>
+      <div class="meal-card" id="meal-5"><div class="meal-head" onclick="toggleMeal('meal-5')"><div class="meal-icon">🍽️</div><div><div class="meal-title">Dinner</div><div class="meal-time">6:00 – 7:00 PM</div></div><i class="ti ti-chevron-down day-chevron"></i></div><div class="meal-body"><div class="food-item"><span class="food-name">Salmon, steak, or chicken</span><span class="food-pro">~40g protein</span></div><div class="food-item"><span class="food-name">Sweet potato or rice</span><span class="food-pro">~50g carbs</span></div><div class="food-item"><span class="food-name">Salad or roasted veg</span><span class="food-pro">micronutrients</span></div><div class="food-item"><span class="food-name">Glass of milk</span><span class="food-pro">~8g protein</span></div></div></div>
+      <div class="meal-card" id="meal-6"><div class="meal-head" onclick="toggleMeal('meal-6')"><div class="meal-icon">🌙</div><div><div class="meal-title">Before Bed</div><div class="meal-time">9:00 – 10:00 PM</div></div><i class="ti ti-chevron-down day-chevron"></i></div><div class="meal-body"><div class="food-item"><span class="food-name">Greek yogurt or cottage cheese</span><span class="food-pro">~20g protein</span></div><div class="food-item"><span class="food-name">Glass of milk</span><span class="food-pro">casein protein</span></div><div style="margin-top:10px;font-size:12px;color:rgba(240,244,255,0.4);line-height:1.6;">Casein digests slowly overnight — feeds muscle repair while he sleeps.</div></div></div>
       <div class="tip-box"><div class="tip-title">The big three</div><div class="tip-text"><strong style="color:#fbbf24">Eat more than he thinks he needs.</strong> His metabolism is running hot.<br><br><strong style="color:#fbbf24">Protein at every meal.</strong> At least 20g each time.<br><br><strong style="color:#fbbf24">Sleep is training.</strong> 9 hours if possible.</div></div>
     </div>
   </div>
 
   <div class="bottom-nav">
-    <div class="bnav-item active" id="bnav-workout" onclick="switchPage('workout')"><i class="ti ti-barbell" aria-hidden="true"></i>Workouts</div>
-    <div class="bnav-item" id="bnav-progress" onclick="switchPage('progress')"><i class="ti ti-chart-bar" aria-hidden="true"></i>Progress</div>
-    <div class="bnav-item" id="bnav-food" onclick="switchPage('food')"><i class="ti ti-apple" aria-hidden="true"></i>Nutrition</div>
+    <div class="bnav-item active" id="bnav-workout" onclick="switchPage('workout')"><i class="ti ti-barbell"></i>Workouts</div>
+    <div class="bnav-item" id="bnav-progress" onclick="switchPage('progress')"><i class="ti ti-chart-bar"></i>Progress</div>
+    <div class="bnav-item" id="bnav-food" onclick="switchPage('food')"><i class="ti ti-apple"></i>Nutrition</div>
   </div>
 </div>
 
 <script>
-const WORKOUTS={mon:[{id:'mon-boxjump',name:'Box Jumps',target:'4 × 5',note:'Soft landing, full reset',sets:4,bodyweight:true,ytQuery:'box jump proper form tutorial'},{id:'mon-squat',name:'Back Squat',target:'4 × 6–8',note:'Heavy and controlled',sets:4,ytQuery:'barbell back squat proper form tutorial'},{id:'mon-bounds',name:'Lateral Bounds',target:'3 × 8 ea',note:'Explode sideways, stick landing',sets:3,bodyweight:true,ytQuery:'lateral bounds hockey training'},{id:'mon-rdl',name:'Romanian Deadlift',target:'3 × 8',note:'Slow descent, feel hamstrings',sets:3,ytQuery:'romanian deadlift proper form tutorial'},{id:'mon-broad',name:'Broad Jumps',target:'3 × 5',note:'Max distance, full reset',sets:3,bodyweight:true,ytQuery:'broad jump form tutorial'},{id:'mon-legpress',name:'Leg Press',target:'3 × 10',note:'Feet shoulder-width, full range',sets:3,ytQuery:'leg press proper form tutorial'},{id:'mon-situp',name:'Sit-Ups',target:'3 × 20',note:'Core to finish every leg day',sets:3,bodyweight:true,ytQuery:'proper sit up form technique'}],tue:[{id:'tue-pullup',name:'Pull-Ups',target:'4 × max',note:'Best hockey exercise',sets:4,bodyweight:true,ytQuery:'pull up proper form tutorial'},{id:'tue-bench',name:'DB Bench Press',target:'3 × 10',note:'2 sec down, explosive up',sets:3,ytQuery:'dumbbell bench press proper form'},{id:'tue-row',name:'Bent-Over DB Row',target:'3 × 10 ea',note:'Flat back, pull to hip',sets:3,ytQuery:'dumbbell bent over row proper form'},{id:'tue-press',name:'DB Shoulder Press',target:'3 × 10',note:'No arching lower back',sets:3,ytQuery:'dumbbell shoulder press proper form'},{id:'tue-lat',name:'Lat Pulldown',target:'3 × 10',note:'Wide grip, pull to upper chest',sets:3,ytQuery:'lat pulldown proper form tutorial'},{id:'tue-situp',name:'Sit-Ups',target:'4 × 20',note:'Feet unanchored if possible',sets:4,bodyweight:true,ytQuery:'proper sit up form technique'},{id:'tue-plank',name:'Plank',target:'3 × 45s',note:'Squeeze glutes and abs',sets:3,bodyweight:true,timed:true,ytQuery:'plank proper form core'},{id:'tue-twist',name:'Russian Twists',target:'3 × 20',note:'Light DB, rotational power',sets:3,ytQuery:'russian twists proper form'}],wed:[{id:'wed-boxjump',name:'Box Jumps',target:'4 × 5',note:'Max height, soft landing',sets:4,bodyweight:true,ytQuery:'box jump proper form tutorial'},{id:'wed-goblet',name:'Goblet Squat',target:'4 × 6',note:'Heavy and controlled',sets:4,ytQuery:'goblet squat proper form tutorial'},{id:'wed-broad',name:'Broad Jumps',target:'3 × 5',note:'Max distance, stick landing',sets:3,bodyweight:true,ytQuery:'broad jump form tutorial'},{id:'wed-rdl',name:'Romanian Deadlift',target:'3 × 8',note:'Hinge at hips, feel hamstring',sets:3,ytQuery:'romanian deadlift proper form tutorial'},{id:'wed-bounds',name:'Lateral Bounds',target:'3 × 6 ea',note:'Mimics skating stride',sets:3,bodyweight:true,ytQuery:'lateral bounds hockey training'},{id:'wed-legpress',name:'Leg Press',target:'3 × 10',note:'Moderate weight, full range',sets:3,ytQuery:'leg press proper form tutorial'},{id:'wed-situp',name:'Sit-Ups',target:'3 × 20',note:'Core to finish',sets:3,bodyweight:true,ytQuery:'proper sit up form technique'}],thu:[{id:'thu-pushup',name:'Push-Up Variations',target:'4 × max',note:'Rotate: decline, close-grip, archer',sets:4,bodyweight:true,ytQuery:'push up variations form'},{id:'thu-incline',name:'DB Incline Press',target:'3 × 10',note:'Upper chest focus',sets:3,ytQuery:'dumbbell incline press proper form'},{id:'thu-cablerow',name:'Seated Cable Row',target:'3 × 10',note:'Squeeze shoulder blades',sets:3,ytQuery:'seated cable row proper form'},{id:'thu-lateral',name:'Lateral Raises',target:'3 × 12',note:'Light — shoulder stability',sets:3,ytQuery:'lateral raises proper form'},{id:'thu-hammer',name:'Hammer Curls',target:'2 × 12',note:'Forearm strength for stick battles',sets:2,ytQuery:'hammer curls proper form'},{id:'thu-dips',name:'Dips / Tricep Ext.',target:'2 × 12',note:'Bodyweight dips if available',sets:2,ytQuery:'tricep dips proper form'},{id:'thu-farmer',name:'Farmer Carries',target:'3 × 40m',note:'Heavy DBs — grip, core, toughness',sets:3,ytQuery:'farmer carry proper form'},{id:'thu-situp',name:'Sit-Ups',target:'3 × 20',note:'Fourth session this week',sets:3,bodyweight:true,ytQuery:'proper sit up form technique'}],sat:[{id:'sat-pushup',name:'Push-Up Variations',target:'4 × max',note:'Rotate: decline, close-grip, archer',sets:4,bodyweight:true,ytQuery:'push up variations form'},{id:'sat-pullup',name:'Pull-Ups',target:'3 × max',note:'Second pull-up session',sets:3,bodyweight:true,ytQuery:'pull up proper form tutorial'},{id:'sat-incline',name:'DB Incline Press',target:'3 × 10',note:'Upper chest focus',sets:3,ytQuery:'dumbbell incline press proper form'},{id:'sat-face',name:'Cable Face Pulls',target:'3 × 15',note:'Shoulder health',sets:3,ytQuery:'cable face pulls proper form'},{id:'sat-farmer',name:'Farmer Carries',target:'3 × 40m',note:'Finish strong',sets:3,ytQuery:'farmer carry proper form'},{id:'sat-situp',name:'Sit-Ups',target:'3 × 20',note:'Habit',sets:3,bodyweight:true,ytQuery:'proper sit up form technique'}]};
-const DAY_TOTALS={mon:WORKOUTS.mon.reduce((a,e)=>a+e.sets,0),tue:WORKOUTS.tue.reduce((a,e)=>a+e.sets,0),wed:WORKOUTS.wed.reduce((a,e)=>a+e.sets,0),thu:WORKOUTS.thu.reduce((a,e)=>a+e.sets,0),sat:WORKOUTS.sat.reduce((a,e)=>a+e.sets,0)};
-const WEEK_TOTAL=Object.values(DAY_TOTALS).reduce((a,b)=>a+b,0);
-const WEIGHTED_EX=Object.values(WORKOUTS).flat().filter(e=>!e.bodyweight);
-let sessionLog={};
-function getTodayStr(){return new Date().toISOString().slice(0,10);}
-function getWeekStart(date){const d=new Date(date+'T12:00:00');const day=d.getDay();const diff=d.getDate()-day+(day===0?-6:1);d.setDate(diff);return d.toISOString().slice(0,10);}
-function getStorageKey(day,dateStr){return 'erik_log_'+day+'_'+(dateStr||getTodayStr());}
-function getLastKey(exId){return 'erik_last_'+exId;}
-function loadSession(day,dateStr){try{const s=localStorage.getItem(getStorageKey(day,dateStr));return s?JSON.parse(s):{};}catch(e){return{};}}
-function saveSession(day){try{localStorage.setItem(getStorageKey(day),JSON.stringify(sessionLog));}catch(e){}}
-function getLastSession(exId){try{const s=localStorage.getItem(getLastKey(exId));return s?JSON.parse(s):null;}catch(e){return null;}}
-function saveLastSession(exId,data){try{localStorage.setItem(getLastKey(exId),JSON.stringify(data));}catch(e){}}
-function ytUrl(q){return 'https://www.youtube.com/results?search_query='+encodeURIComponent(q);}
-function getDayKey(dateStr){const d=new Date(dateStr+'T12:00:00');return['sun','mon','tue','wed','thu','fri','sat'][d.getDay()];}
-function getDaysInWeek(ws){const days=[];const d=new Date(ws+'T12:00:00');for(let i=0;i<7;i++){days.push(d.toISOString().slice(0,10));d.setDate(d.getDate()+1);}return days;}
-function countDoneSets(dayKey,dateStr){const log=loadSession(dayKey,dateStr);let done=0;(WORKOUTS[dayKey]||[]).forEach(ex=>{for(let s=0;s<ex.sets;s++){if(log[ex.id+'-s'+s]?.done)done++;}});return done;}
-function getAllWeekStarts(){const weeks=new Set();try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('erik_log_')){const parts=k.split('_');const dateStr=parts[parts.length-1];if(/^\d{4}-\d{2}-\d{2}$/.test(dateStr))weeks.add(getWeekStart(dateStr));}}}catch(e){}return[...weeks].sort();}
-function calcWeekStats(ws){const dates=getDaysInWeek(ws);let done=0;dates.forEach(d=>{const dk=getDayKey(d);if(WORKOUTS[dk])done+=countDoneSets(dk,d);});return{done,total:WEEK_TOTAL,pct:Math.round((done/WEEK_TOTAL)*100)};}
-function getWeightHistory(exId){const ex=Object.values(WORKOUTS).flat().find(e=>e.id===exId);if(!ex)return[];const results=[];try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(!k||!k.startsWith('erik_log_'))continue;const parts=k.split('_');const dateStr=parts[parts.length-1];const dayKey=parts[2];if(!/^\d{4}-\d{2}-\d{2}$/.test(dateStr))continue;const log=loadSession(dayKey,dateStr);const weights=[];for(let s=0;s<ex.sets;s++){const entry=log[ex.id+'-s'+s];if(entry?.done&&entry?.weight&&parseFloat(entry.weight)>0)weights.push(parseFloat(entry.weight));}if(weights.length>0){const avg=Math.round(weights.reduce((a,b)=>a+b,0)/weights.length);results.push({date:dateStr,weight:avg});}}}catch(e){}return results.sort((a,b)=>a.date.localeCompare(b.date));}
-function getTueVsThu(){const t=[],h=[];try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(!k||!k.startsWith('erik_log_'))continue;const parts=k.split('_');const dateStr=parts[parts.length-1];const dayKey=parts[2];if(!/^\d{4}-\d{2}-\d{2}$/.test(dateStr))continue;if(dayKey==='tue'){const done=countDoneSets('tue',dateStr);t.push(Math.round((done/DAY_TOTALS.tue)*100));}if(dayKey==='thu'){const done=countDoneSets('thu',dateStr);h.push(Math.round((done/DAY_TOTALS.thu)*100));}}}catch(e){}const tA=t.length?Math.round(t.reduce((a,b)=>a+b,0)/t.length):null;const hA=h.length?Math.round(h.reduce((a,b)=>a+b,0)/h.length):null;return{tueAvg:tA,thuAvg:hA,tueSessions:t.length,thuSessions:h.length};}
+const WORKOUTS = {
+  mon: [
+    {id:'mon-bulg',    name:'Bulgarian Split Squat', target:'4 × 6 ea', note:'Rear foot elevated, deep range. Go heavy.', sets:4, superset:'A', ytQuery:'bulgarian split squat proper form'},
+    {id:'mon-boxjump', name:'Box Jumps (Plyo)',       target:'4 × 5',   note:'Superset with Bulgarian — explode right after last rep.', sets:4, bodyweight:true, superset:'A', ytQuery:'box jump proper form tutorial'},
+    {id:'mon-squat',   name:'Back Squat',             target:'4 × 6–8', note:'Heavy and controlled', sets:4, ytQuery:'barbell back squat proper form tutorial'},
+    {id:'mon-bounds',  name:'Lateral Bounds',         target:'3 × 8 ea',note:'Explode sideways, stick landing', sets:3, bodyweight:true, ytQuery:'lateral bounds hockey training'},
+    {id:'mon-rdl',     name:'Romanian Deadlift',      target:'3 × 8',   note:'Slow descent, feel hamstrings', sets:3, ytQuery:'romanian deadlift proper form tutorial'},
+    {id:'mon-broad',   name:'Broad Jumps',            target:'3 × 5',   note:'Max distance, full reset', sets:3, bodyweight:true, ytQuery:'broad jump form tutorial'},
+    {id:'mon-legpress',name:'Leg Press',              target:'3 × 10',  note:'Feet shoulder-width, full range', sets:3, ytQuery:'leg press proper form tutorial'},
+    {id:'mon-legraise',name:'Hanging Leg Raises',     target:'3 × 12',  note:'Control the descent, no swinging', sets:3, bodyweight:true, ytQuery:'hanging leg raises proper form'},
+    {id:'mon-medball', name:'Med Ball Rotational Throw',target:'3 × 8 ea',note:'Drive from hips, follow through', sets:3, bodyweight:true, ytQuery:'medicine ball rotational throw exercise'},
+    {id:'mon-situp',   name:'Sit-Ups',                target:'3 × 20',  note:'Core finisher', sets:3, bodyweight:true, ytQuery:'proper sit up form technique'}
+  ],
+  tue: [
+    {id:'tue-pullup',  name:'Pull-Ups',               target:'4 × max', note:'Best hockey exercise — full dead hang each rep', sets:4, bodyweight:true, ytQuery:'pull up proper form tutorial'},
+    {id:'tue-bench',   name:'DB Bench Press',         target:'4 × 10',  note:'2 sec down, explosive up — primary chest builder', sets:4, ytQuery:'dumbbell bench press proper form'},
+    {id:'tue-flyes',   name:'DB Flyes',               target:'3 × 12',  note:'Wide arc, slight bend in elbow, feel the stretch', sets:3, ytQuery:'dumbbell flyes proper form chest'},
+    {id:'tue-incline', name:'DB Incline Press',       target:'3 × 10',  note:'30–45° angle, upper chest focus', sets:3, ytQuery:'dumbbell incline press proper form'},
+    {id:'tue-arnold',  name:'Arnold Press',           target:'3 × 10',  note:'Rotate palms as you press — hits all three delt heads', sets:3, ytQuery:'arnold press proper form shoulders'},
+    {id:'tue-frontrise',name:'Front Raises',          target:'3 × 12',  note:'Alternate arms, control the descent', sets:3, ytQuery:'front raises proper form shoulders'},
+    {id:'tue-facepull',name:'Cable Face Pulls',       target:'3 × 15',  note:'Shoulder health — external rotation, pull to forehead', sets:3, ytQuery:'cable face pulls proper form'},
+    {id:'tue-row',     name:'Bent-Over DB Row',       target:'3 × 10 ea',note:'Flat back, pull to hip', sets:3, ytQuery:'dumbbell bent over row proper form'},
+    {id:'tue-lat',     name:'Lat Pulldown',           target:'3 × 10',  note:'Wide grip, pull to upper chest', sets:3, ytQuery:'lat pulldown proper form tutorial'},
+    {id:'tue-legraise',name:'Hanging Leg Raises',     target:'3 × 12',  note:'Slow and controlled', sets:3, bodyweight:true, ytQuery:'hanging leg raises proper form'},
+    {id:'tue-twist',   name:'Russian Twists',         target:'3 × 20',  note:'Light DB, rotational power', sets:3, ytQuery:'russian twists proper form'},
+    {id:'tue-wristcurl',name:'Wrist Curls',           target:'3 × 15',  note:'Palms up, full range. Light weight.', sets:3, ytQuery:'wrist curls forearm exercise'},
+    {id:'tue-revwrist',name:'Reverse Wrist Curls',    target:'3 × 15',  note:'Palms down — balances the forearm', sets:3, ytQuery:'reverse wrist curls forearm exercise'}
+  ],
+  wed: [
+    {id:'wed-bulg',    name:'Bulgarian Split Squat', target:'4 × 6 ea', note:'Rear foot elevated, heavy — same as Monday.', sets:4, superset:'A', ytQuery:'bulgarian split squat proper form'},
+    {id:'wed-broad',   name:'Broad Jumps (Plyo)',    target:'4 × 5',    note:'Superset with Bulgarian — max distance, stick landing.', sets:4, bodyweight:true, superset:'A', ytQuery:'broad jump form tutorial'},
+    {id:'wed-boxjump', name:'Box Jumps',             target:'3 × 5',    note:'Max height, soft landing', sets:3, bodyweight:true, ytQuery:'box jump proper form tutorial'},
+    {id:'wed-goblet',  name:'Goblet Squat',          target:'4 × 6',    note:'Heavy and controlled', sets:4, ytQuery:'goblet squat proper form tutorial'},
+    {id:'wed-rdl',     name:'Romanian Deadlift',     target:'3 × 8',    note:'Hinge at hips, feel hamstring', sets:3, ytQuery:'romanian deadlift proper form tutorial'},
+    {id:'wed-bounds',  name:'Lateral Bounds',        target:'3 × 6 ea', note:'Mimics skating stride', sets:3, bodyweight:true, ytQuery:'lateral bounds hockey training'},
+    {id:'wed-legpress',name:'Leg Press',             target:'3 × 10',   note:'Moderate weight, full range', sets:3, ytQuery:'leg press proper form tutorial'},
+    {id:'wed-legraise',name:'Hanging Leg Raises',    target:'3 × 12',   note:'No swinging — slow and controlled', sets:3, bodyweight:true, ytQuery:'hanging leg raises proper form'},
+    {id:'wed-cabletwist',name:'Cable Rotational Pull',target:'3 × 10 ea',note:'Low-to-high, drive from core not arms', sets:3, ytQuery:'cable woodchop rotational exercise'},
+    {id:'wed-situp',   name:'Sit-Ups',               target:'3 × 20',   note:'Core to finish', sets:3, bodyweight:true, ytQuery:'proper sit up form technique'}
+  ],
+  thu: [
+    {id:'thu-pushup',  name:'Push-Up Variations',    target:'4 × max',  note:'Rotate: decline, close-grip, archer', sets:4, bodyweight:true, ytQuery:'push up variations form'},
+    {id:'thu-incline', name:'DB Incline Press',      target:'3 × 10',   note:'Upper chest — 30–45° bench', sets:3, ytQuery:'dumbbell incline press proper form'},
+    {id:'thu-flyes',   name:'DB Flyes',              target:'3 × 12',   note:'Wide arc, stretch at the bottom, squeeze at top', sets:3, ytQuery:'dumbbell flyes proper form chest'},
+    {id:'thu-upright', name:'Upright Rows',          target:'3 × 12',   note:'Shoulder-width grip, elbows lead, pull to chin', sets:3, ytQuery:'upright rows proper form shoulders'},
+    {id:'thu-shrug',   name:'DB Shrugs',             target:'3 × 15',   note:'Heavy DBs, full elevation, 1 sec hold at top', sets:3, ytQuery:'dumbbell shrugs proper form'},
+    {id:'thu-lateral', name:'Lateral Raises',        target:'3 × 12',   note:'Light — shoulder stability, control down', sets:3, ytQuery:'lateral raises proper form'},
+    {id:'thu-facepull',name:'Cable Face Pulls',      target:'3 × 15',   note:'Shoulder health — pull to forehead, external rotation', sets:3, ytQuery:'cable face pulls proper form'},
+    {id:'thu-cablerow',name:'Seated Cable Row',      target:'3 × 10',   note:'Squeeze shoulder blades at the end', sets:3, ytQuery:'seated cable row proper form'},
+    {id:'thu-hammer',  name:'Hammer Curls',          target:'2 × 12',   note:'Forearm + bicep strength for stick battles', sets:2, ytQuery:'hammer curls proper form'},
+    {id:'thu-dips',    name:'Dips / Tricep Ext.',    target:'2 × 12',   note:'Bodyweight dips if available', sets:2, ytQuery:'tricep dips proper form'},
+    {id:'thu-farmer',  name:'Farmer Carries',        target:'3 × 40m',  note:'Heavy DBs — grip, core, toughness', sets:3, ytQuery:'farmer carry proper form'},
+    {id:'thu-wristcurl',name:'Wrist Curls',          target:'3 × 15',   note:'Palms up, full range. Light weight.', sets:3, ytQuery:'wrist curls forearm exercise'},
+    {id:'thu-revwrist',name:'Reverse Wrist Curls',   target:'3 × 15',   note:'Palms down — hits the extensors', sets:3, ytQuery:'reverse wrist curls forearm exercise'},
+    {id:'thu-medball', name:'Med Ball Rotational Throw',target:'3 × 8 ea',note:'Explosive hip rotation — hockey power', sets:3, bodyweight:true, ytQuery:'medicine ball rotational throw exercise'},
+    {id:'thu-situp',   name:'Sit-Ups',               target:'3 × 20',   note:'Core finisher', sets:3, bodyweight:true, ytQuery:'proper sit up form technique'}
+  ],
+  sat: [
+    {id:'sat-pushup',  name:'Push-Up Variations',    target:'4 × max',  note:'Rotate: decline, close-grip, archer', sets:4, bodyweight:true, ytQuery:'push up variations form'},
+    {id:'sat-pullup',  name:'Pull-Ups',              target:'3 × max',  note:'Second pull-up session this week', sets:3, bodyweight:true, ytQuery:'pull up proper form tutorial'},
+    {id:'sat-incline', name:'DB Incline Press',      target:'3 × 10',   note:'Upper chest focus', sets:3, ytQuery:'dumbbell incline press proper form'},
+    {id:'sat-arnold',  name:'Arnold Press',          target:'3 × 10',   note:'Full rotation through the press', sets:3, ytQuery:'arnold press proper form shoulders'},
+    {id:'sat-shrug',   name:'DB Shrugs',             target:'3 × 15',   note:'Heavy, hold at top', sets:3, ytQuery:'dumbbell shrugs proper form'},
+    {id:'sat-facepull',name:'Cable Face Pulls',      target:'3 × 15',   note:'Shoulder health finisher', sets:3, ytQuery:'cable face pulls proper form'},
+    {id:'sat-farmer',  name:'Farmer Carries',        target:'3 × 40m',  note:'Finish strong', sets:3, ytQuery:'farmer carry proper form'},
+    {id:'sat-legraise',name:'Hanging Leg Raises',    target:'3 × 12',   note:'Core finisher', sets:3, bodyweight:true, ytQuery:'hanging leg raises proper form'},
+    {id:'sat-situp',   name:'Sit-Ups',               target:'3 × 20',   note:'Habit', sets:3, bodyweight:true, ytQuery:'proper sit up form technique'}
+  ]
+};
+
+const DAY_TOTALS = {};
+Object.keys(WORKOUTS).forEach(d => { DAY_TOTALS[d] = WORKOUTS[d].reduce((a,e)=>a+e.sets,0); });
+const WEEK_TOTAL = Object.values(DAY_TOTALS).reduce((a,b)=>a+b,0);
+const WEIGHTED_EX = Object.values(WORKOUTS).flat().filter(e=>!e.bodyweight);
+
+// Update subtitle counts
+function updateSubtitles() {
+  const counts = {
+    mon: '10 exercises · ~65 min', tue: '13 exercises · ~65 min',
+    wed: '10 exercises · ~60 min', thu: '15 exercises · ~70 min', sat: '9 exercises · ~45 min'
+  };
+  Object.keys(counts).forEach(d => {
+    const el = document.getElementById('sub-'+d);
+    if(el) el.textContent = counts[d];
+  });
+}
+
+let sessionLog = {};
+
+function getTodayStr() { return new Date().toISOString().slice(0,10); }
+function getWeekStart(date) {
+  const d = new Date(date+'T12:00:00');
+  const day = d.getDay();
+  const diff = d.getDate() - day + (day===0 ? -6 : 1);
+  d.setDate(diff);
+  return d.toISOString().slice(0,10);
+}
+function getStorageKey(day, dateStr) { return 'erik_log_'+day+'_'+(dateStr||getTodayStr()); }
+function getLastKey(exId) { return 'erik_last_'+exId; }
+function loadSession(day, dateStr) {
+  try { const s=localStorage.getItem(getStorageKey(day, dateStr||getTodayStr())); return s?JSON.parse(s):{}; }
+  catch(e) { return {}; }
+}
+function saveSession(day) {
+  try { localStorage.setItem(getStorageKey(day, getTodayStr()), JSON.stringify(sessionLog)); }
+  catch(e) { console.warn('Save failed',e); }
+}
+function getLastSession(exId) {
+  try { const s=localStorage.getItem(getLastKey(exId)); return s?JSON.parse(s):null; } catch(e) { return null; }
+}
+function saveLastSession(exId, data) {
+  try { localStorage.setItem(getLastKey(exId), JSON.stringify(data)); } catch(e) {}
+}
+function ytUrl(q) { return 'https://www.youtube.com/results?search_query='+encodeURIComponent(q); }
+function getDayKey(dateStr) { const d=new Date(dateStr+'T12:00:00'); return['sun','mon','tue','wed','thu','fri','sat'][d.getDay()]; }
+function getDaysInWeek(ws) {
+  const days=[],d=new Date(ws+'T12:00:00');
+  for(let i=0;i<7;i++){days.push(d.toISOString().slice(0,10));d.setDate(d.getDate()+1);}
+  return days;
+}
+function countDoneSets(dayKey, dateStr) {
+  const log=loadSession(dayKey,dateStr); let done=0;
+  (WORKOUTS[dayKey]||[]).forEach(ex=>{for(let s=0;s<ex.sets;s++){if(log[ex.id+'-s'+s]?.done)done++;}});
+  return done;
+}
+function getAllWeekStarts() {
+  const weeks=new Set();
+  try { for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('erik_log_')){const parts=k.split('_');const dateStr=parts[parts.length-1];if(/^\d{4}-\d{2}-\d{2}$/.test(dateStr))weeks.add(getWeekStart(dateStr));}}} catch(e){}
+  return[...weeks].sort();
+}
+function calcWeekStats(ws) {
+  const dates=getDaysInWeek(ws); let done=0;
+  dates.forEach(d=>{const dk=getDayKey(d);if(WORKOUTS[dk])done+=countDoneSets(dk,d);});
+  return{done,total:WEEK_TOTAL,pct:Math.round((done/WEEK_TOTAL)*100)};
+}
+function getWeightHistory(exId) {
+  const ex=Object.values(WORKOUTS).flat().find(e=>e.id===exId); if(!ex)return[];
+  const results=[];
+  try { for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(!k||!k.startsWith('erik_log_'))continue;const parts=k.split('_');const dateStr=parts[parts.length-1];const dayKey=parts[2];if(!/^\d{4}-\d{2}-\d{2}$/.test(dateStr))continue;const log=loadSession(dayKey,dateStr);const weights=[];for(let s=0;s<ex.sets;s++){const entry=log[ex.id+'-s'+s];if(entry?.done&&entry?.weight&&parseFloat(entry.weight)>0)weights.push(parseFloat(entry.weight));}if(weights.length>0){const avg=Math.round(weights.reduce((a,b)=>a+b,0)/weights.length);results.push({date:dateStr,weight:avg});}}} catch(e){}
+  return results.sort((a,b)=>a.date.localeCompare(b.date));
+}
+function getTueVsThu() {
+  const t=[],h=[];
+  try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(!k||!k.startsWith('erik_log_'))continue;const parts=k.split('_');const dateStr=parts[parts.length-1];const dayKey=parts[2];if(!/^\d{4}-\d{2}-\d{2}$/.test(dateStr))continue;if(dayKey==='tue'){const done=countDoneSets('tue',dateStr);t.push(Math.round((done/DAY_TOTALS.tue)*100));}if(dayKey==='thu'){const done=countDoneSets('thu',dateStr);h.push(Math.round((done/DAY_TOTALS.thu)*100));}}}catch(e){}
+  const tA=t.length?Math.round(t.reduce((a,b)=>a+b,0)/t.length):null;
+  const hA=h.length?Math.round(h.reduce((a,b)=>a+b,0)/h.length):null;
+  return{tueAvg:tA,thuAvg:hA,tueSessions:t.length,thuSessions:h.length};
+}
 function setRing(id,pct,color){const circ=232.5,offset=circ-(circ*Math.min(pct,100)/100);const el=document.getElementById(id);if(el){el.style.strokeDashoffset=offset;el.setAttribute('stroke',color);}}
-function drawWeightChart(history){const canvas=document.getElementById('prog-canvas');const wrap=document.getElementById('prog-chart-wrap');const empty=document.getElementById('prog-empty');const stats=document.getElementById('prog-stats');if(history.length<2){canvas.style.display='none';empty.style.display='block';empty.textContent=history.length===0?'No weight data logged yet':'Log at least 2 sessions to see a trend';stats.style.display='none';return;}canvas.style.display='block';empty.style.display='none';stats.style.display='flex';const startW=history[0].weight;const currentW=history[history.length-1].weight;const gain=currentW-startW;document.getElementById('prog-start').textContent=startW+'lbs';document.getElementById('prog-current').textContent=currentW+'lbs';document.getElementById('prog-gain').textContent=(gain>=0?'+':'')+gain+'lbs';document.getElementById('prog-gain').style.color=gain>=0?'#34d399':'#fb923c';const dpr=window.devicePixelRatio||1;const W=wrap.clientWidth-28;const H=140;canvas.width=W*dpr;canvas.height=H*dpr;canvas.style.width=W+'px';canvas.style.height=H+'px';const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);const pad={top:16,right:12,bottom:28,left:36};const cw=W-pad.left-pad.right;const ch=H-pad.top-pad.bottom;const weights=history.map(h=>h.weight);const minW=Math.min(...weights)-5;const maxW=Math.max(...weights)+5;const range=maxW-minW||1;const pts=history.map((h,i)=>({x:pad.left+(i/(history.length-1||1))*cw,y:pad.top+ch-(((h.weight-minW)/range)*ch)}));ctx.strokeStyle='rgba(255,255,255,0.06)';ctx.lineWidth=0.5;for(let i=0;i<=4;i++){const y=pad.top+(ch/4)*i;ctx.beginPath();ctx.moveTo(pad.left,y);ctx.lineTo(pad.left+cw,y);ctx.stroke();const val=Math.round(maxW-((maxW-minW)/4)*i);ctx.fillStyle='rgba(240,244,255,0.3)';ctx.font='10px system-ui';ctx.textAlign='right';ctx.fillText(val+'lb',pad.left-4,y+3);}ctx.fillStyle='rgba(240,244,255,0.3)';ctx.font='10px system-ui';ctx.textAlign='center';const step=Math.ceil(history.length/4);history.forEach((h,i)=>{if(i===0||i===history.length-1||i%step===0){const x=pad.left+(i/(history.length-1||1))*cw;const d=new Date(h.date+'T12:00:00');ctx.fillText((d.getMonth()+1)+'/'+(d.getDate()),x,H-6);}});const grad=ctx.createLinearGradient(0,pad.top,0,pad.top+ch);grad.addColorStop(0,'rgba(56,189,248,0.18)');grad.addColorStop(1,'rgba(56,189,248,0.02)');ctx.beginPath();ctx.moveTo(pts[0].x,pad.top+ch);pts.forEach(p=>ctx.lineTo(p.x,p.y));ctx.lineTo(pts[pts.length-1].x,pad.top+ch);ctx.closePath();ctx.fillStyle=grad;ctx.fill();ctx.beginPath();ctx.strokeStyle='#38bdf8';ctx.lineWidth=2;ctx.lineJoin='round';pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));ctx.stroke();pts.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,3.5,0,Math.PI*2);ctx.fillStyle='#38bdf8';ctx.fill();ctx.strokeStyle='#0a0f1a';ctx.lineWidth=1.5;ctx.stroke();});}
-function renderWeightChart(){const sel=document.getElementById('ex-selector');const exId=sel.value;if(!exId){document.getElementById('prog-canvas').style.display='none';document.getElementById('prog-empty').style.display='block';document.getElementById('prog-empty').textContent='Select an exercise above to see weight history';document.getElementById('prog-stats').style.display='none';return;}drawWeightChart(getWeightHistory(exId));}
+function drawWeightChart(history){
+  const canvas=document.getElementById('prog-canvas'),wrap=document.getElementById('prog-chart-wrap'),empty=document.getElementById('prog-empty'),stats=document.getElementById('prog-stats');
+  if(history.length<2){canvas.style.display='none';empty.style.display='block';empty.textContent=history.length===0?'No weight data logged yet':'Log at least 2 sessions to see a trend';stats.style.display='none';return;}
+  canvas.style.display='block';empty.style.display='none';stats.style.display='flex';
+  const startW=history[0].weight,currentW=history[history.length-1].weight,gain=currentW-startW;
+  document.getElementById('prog-start').textContent=startW+'lbs';document.getElementById('prog-current').textContent=currentW+'lbs';document.getElementById('prog-gain').textContent=(gain>=0?'+':'')+gain+'lbs';document.getElementById('prog-gain').style.color=gain>=0?'#34d399':'#fb923c';
+  const dpr=window.devicePixelRatio||1,W=wrap.clientWidth-28,H=140;canvas.width=W*dpr;canvas.height=H*dpr;canvas.style.width=W+'px';canvas.style.height=H+'px';
+  const ctx=canvas.getContext('2d');ctx.scale(dpr,dpr);
+  const pad={top:16,right:12,bottom:28,left:36},cw=W-pad.left-pad.right,ch=H-pad.top-pad.bottom;
+  const weights=history.map(h=>h.weight),minW=Math.min(...weights)-5,maxW=Math.max(...weights)+5,range=maxW-minW||1;
+  const pts=history.map((h,i)=>({x:pad.left+(i/(history.length-1||1))*cw,y:pad.top+ch-(((h.weight-minW)/range)*ch)}));
+  ctx.strokeStyle='rgba(255,255,255,0.06)';ctx.lineWidth=0.5;
+  for(let i=0;i<=4;i++){const y=pad.top+(ch/4)*i;ctx.beginPath();ctx.moveTo(pad.left,y);ctx.lineTo(pad.left+cw,y);ctx.stroke();const val=Math.round(maxW-((maxW-minW)/4)*i);ctx.fillStyle='rgba(240,244,255,0.3)';ctx.font='10px system-ui';ctx.textAlign='right';ctx.fillText(val+'lb',pad.left-4,y+3);}
+  ctx.fillStyle='rgba(240,244,255,0.3)';ctx.font='10px system-ui';ctx.textAlign='center';const step=Math.ceil(history.length/4);
+  history.forEach((h,i)=>{if(i===0||i===history.length-1||i%step===0){const x=pad.left+(i/(history.length-1||1))*cw;const d=new Date(h.date+'T12:00:00');ctx.fillText((d.getMonth()+1)+'/'+(d.getDate()),x,H-6);}});
+  const grad=ctx.createLinearGradient(0,pad.top,0,pad.top+ch);grad.addColorStop(0,'rgba(56,189,248,0.18)');grad.addColorStop(1,'rgba(56,189,248,0.02)');
+  ctx.beginPath();ctx.moveTo(pts[0].x,pad.top+ch);pts.forEach(p=>ctx.lineTo(p.x,p.y));ctx.lineTo(pts[pts.length-1].x,pad.top+ch);ctx.closePath();ctx.fillStyle=grad;ctx.fill();
+  ctx.beginPath();ctx.strokeStyle='#38bdf8';ctx.lineWidth=2;ctx.lineJoin='round';pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));ctx.stroke();
+  pts.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,3.5,0,Math.PI*2);ctx.fillStyle='#38bdf8';ctx.fill();ctx.strokeStyle='#0a0f1a';ctx.lineWidth=1.5;ctx.stroke();});
+}
+function renderWeightChart(){const sel=document.getElementById('ex-selector'),exId=sel.value;if(!exId){document.getElementById('prog-canvas').style.display='none';document.getElementById('prog-empty').style.display='block';document.getElementById('prog-empty').textContent='Select an exercise above to see weight history';document.getElementById('prog-stats').style.display='none';return;}drawWeightChart(getWeightHistory(exId));}
 function populateExSelector(){const sel=document.getElementById('ex-selector');sel.innerHTML='<option value="">Select an exercise...</option>';WEIGHTED_EX.forEach(ex=>{const opt=document.createElement('option');opt.value=ex.id;opt.textContent=ex.name;sel.appendChild(opt);});}
-function renderProgress(){const todayStr=getTodayStr();const thisWeekStart=getWeekStart(todayStr);const allWeeks=getAllWeekStarts();if(!allWeeks.includes(thisWeekStart))allWeeks.push(thisWeekStart);const uniqueWeeks=[...new Set(allWeeks)].sort();const thisWeek=calcWeekStats(thisWeekStart);setRing('ring-week-fill',thisWeek.pct,'#38bdf8');document.getElementById('ring-week-pct').textContent=thisWeek.pct+'%';document.getElementById('ring-week-detail').textContent=thisWeek.done+' / '+thisWeek.total+' sets';let totalDone=0,totalPossible=0,bestPct=0,streak=0;const weekStats=uniqueWeeks.map(ws=>{const s=calcWeekStats(ws);totalDone+=s.done;totalPossible+=s.total;if(s.pct>bestPct)bestPct=s.pct;return{ws,...s};});const overallPct=totalPossible>0?Math.round((totalDone/totalPossible)*100):0;for(let i=weekStats.length-1;i>=0;i--){if(weekStats[i].pct>=50)streak++;else break;}setRing('ring-all-fill',overallPct,'#34d399');document.getElementById('ring-all-pct').textContent=overallPct+'%';document.getElementById('ring-all-detail').textContent=uniqueWeeks.length+' week'+(uniqueWeeks.length!==1?'s':'')+' logged';document.getElementById('streak-num').textContent=streak;document.getElementById('best-week-num').textContent=bestPct+'%';document.getElementById('total-sets-num').textContent=totalDone;const vs=getTueVsThu();document.getElementById('vs-tue-pct').textContent=vs.tueAvg!==null?vs.tueAvg+'%':'—';document.getElementById('vs-thu-pct').textContent=vs.thuAvg!==null?vs.thuAvg+'%':'—';document.getElementById('vs-tue-sessions').textContent=vs.tueSessions+' session'+(vs.tueSessions!==1?'s':'');document.getElementById('vs-thu-sessions').textContent=vs.thuSessions+' session'+(vs.thuSessions!==1?'s':'');if(vs.tueAvg!==null&&vs.thuAvg!==null){const tot=(vs.tueAvg+vs.thuAvg)||1;document.getElementById('vs-bar-tue').style.width=Math.round((vs.tueAvg/tot)*50)+'%';document.getElementById('vs-bar-thu').style.width=Math.round((vs.thuAvg/tot)*50)+'%';const w=document.getElementById('vs-winner');if(vs.tueAvg>vs.thuAvg)w.innerHTML='<strong>Tuesday</strong> is his stronger upper day so far';else if(vs.thuAvg>vs.tueAvg)w.innerHTML='<strong>Thursday</strong> is his stronger upper day so far';else w.innerHTML='Perfectly even — tied upper days';}const wh=document.getElementById('week-history');wh.innerHTML=weekStats.length===0?'<div style="font-size:13px;color:rgba(240,244,255,0.3);padding:12px 0;">No workouts logged yet.</div>':weekStats.slice().reverse().map((ws,i)=>{const isThis=ws.ws===thisWeekStart;const label=isThis?'This week':'Wk '+(weekStats.length-i);const color=ws.pct>=80?'#34d399':ws.pct>=50?'#38bdf8':'#fb923c';return`<div class="week-row"><div class="week-label">${label}</div><div class="week-bar-wrap"><div class="week-bar-fill" style="width:${ws.pct}%;background:${color}"></div></div><div class="week-pct-label" style="color:${color}">${ws.pct}%</div></div>`;}).join('');const db=document.getElementById('day-breakdown');const dayOrder=['mon','tue','wed','thu','sat'];const dayLabels={mon:'Mon',tue:'Tue',wed:'Wed',thu:'Thu',sat:'Sat'};const dayNames={mon:'Heavy Legs',tue:'Upper + Core',wed:'Legs + Power',thu:'Upper + Grip',sat:'Optional'};const dayDates=getDaysInWeek(thisWeekStart);db.innerHTML=dayOrder.map(dk=>{const dateStr=dayDates.find(d=>getDayKey(d)===dk);const done=dateStr?countDoneSets(dk,dateStr):0;const total=DAY_TOTALS[dk];const pct=Math.round((done/total)*100);const color=pct>=80?'#34d399':pct>=50?'#38bdf8':pct>0?'#fb923c':'rgba(255,255,255,0.15)';return`<div class="db-row"><div class="db-day" style="color:${color};font-weight:500">${dayLabels[dk]}</div><div class="db-name">${dayNames[dk]}</div><div class="db-bar-wrap"><div class="db-bar-fill" style="width:${pct}%;background:${color}"></div></div><div class="db-pct" style="color:${color}">${pct}%</div><div class="db-sets">${done}/${total}</div></div>`;}).join('');populateExSelector();renderWeightChart();}
-function renderExercises(day){const container=document.getElementById(day+'-exercises');if(!container)return;sessionLog=loadSession(day);container.innerHTML=(WORKOUTS[day]||[]).map(ex=>renderExBlock(day,ex)).join('');}
-function renderExBlock(day,ex){const last=getLastSession(ex.id);const lastHtml=last?`<div class="last-session"><i class="ti ti-history" aria-hidden="true"></i> Last: ${last.summary}</div>`:'';let setsHtml=`<div class="sets-header"><span>#</span><span>Reps</span><span>${ex.bodyweight?'BW/lbs':'lbs'}</span><span></span></div>`;for(let s=0;s<ex.sets;s++){const key=ex.id+'-s'+s;const entry=sessionLog[key]||{};setsHtml+=`<div class="set-row" id="row-${key}"><span class="set-num">${s+1}</span><input class="set-input" type="number" inputmode="numeric" placeholder="${ex.timed?'sec':'reps'}" value="${entry.reps||''}" onchange="logSet('${day}','${ex.id}',${s},'reps',this.value)"/><input class="set-input" type="number" inputmode="decimal" placeholder="${ex.bodyweight?'BW':'lbs'}" value="${entry.weight||''}" onchange="logSet('${day}','${ex.id}',${s},'weight',this.value)"/><div class="set-check ${entry.done?'done':''}" onclick="toggleDone('${day}','${ex.id}',${s})"><i class="ti ti-check" aria-hidden="true"></i></div></div>`;}return`<div class="ex-block"><div class="ex-top"><div class="ex-top-left"><div class="ex-name">${ex.name}</div><a class="vid-btn" href="${ytUrl(ex.ytQuery)}" target="_blank" rel="noopener"><i class="ti ti-brand-youtube" aria-hidden="true"></i> Form</a></div><div class="ex-target">${ex.target}</div></div><div class="ex-note-txt">${ex.note}</div>${lastHtml}${setsHtml}</div>`;}
+function renderProgress(){
+  const todayStr=getTodayStr(),thisWeekStart=getWeekStart(todayStr);
+  const allWeeks=getAllWeekStarts();if(!allWeeks.includes(thisWeekStart))allWeeks.push(thisWeekStart);
+  const uniqueWeeks=[...new Set(allWeeks)].sort();
+  const thisWeek=calcWeekStats(thisWeekStart);setRing('ring-week-fill',thisWeek.pct,'#38bdf8');document.getElementById('ring-week-pct').textContent=thisWeek.pct+'%';document.getElementById('ring-week-detail').textContent=thisWeek.done+' / '+thisWeek.total+' sets';
+  let totalDone=0,totalPossible=0,bestPct=0,streak=0;
+  const weekStats=uniqueWeeks.map(ws=>{const s=calcWeekStats(ws);totalDone+=s.done;totalPossible+=s.total;if(s.pct>bestPct)bestPct=s.pct;return{ws,...s};});
+  const overallPct=totalPossible>0?Math.round((totalDone/totalPossible)*100):0;
+  for(let i=weekStats.length-1;i>=0;i--){if(weekStats[i].pct>=50)streak++;else break;}
+  setRing('ring-all-fill',overallPct,'#34d399');document.getElementById('ring-all-pct').textContent=overallPct+'%';document.getElementById('ring-all-detail').textContent=uniqueWeeks.length+' week'+(uniqueWeeks.length!==1?'s':'')+' logged';
+  document.getElementById('streak-num').textContent=streak;document.getElementById('best-week-num').textContent=bestPct+'%';document.getElementById('total-sets-num').textContent=totalDone;
+  const vs=getTueVsThu();document.getElementById('vs-tue-pct').textContent=vs.tueAvg!==null?vs.tueAvg+'%':'—';document.getElementById('vs-thu-pct').textContent=vs.thuAvg!==null?vs.thuAvg+'%':'—';document.getElementById('vs-tue-sessions').textContent=vs.tueSessions+' session'+(vs.tueSessions!==1?'s':'');document.getElementById('vs-thu-sessions').textContent=vs.thuSessions+' session'+(vs.thuSessions!==1?'s':'');
+  if(vs.tueAvg!==null&&vs.thuAvg!==null){const tot=(vs.tueAvg+vs.thuAvg)||1;document.getElementById('vs-bar-tue').style.width=Math.round((vs.tueAvg/tot)*50)+'%';document.getElementById('vs-bar-thu').style.width=Math.round((vs.thuAvg/tot)*50)+'%';const w=document.getElementById('vs-winner');if(vs.tueAvg>vs.thuAvg)w.innerHTML='<strong>Tuesday</strong> is his stronger upper day so far';else if(vs.thuAvg>vs.tueAvg)w.innerHTML='<strong>Thursday</strong> is his stronger upper day so far';else w.innerHTML='Perfectly even — tied upper days';}
+  const wh=document.getElementById('week-history');
+  wh.innerHTML=weekStats.length===0?'<div style="font-size:13px;color:rgba(240,244,255,0.3);padding:12px 0;">No workouts logged yet.</div>':weekStats.slice().reverse().map((ws,i)=>{const isThis=ws.ws===thisWeekStart;const label=isThis?'This week':'Wk '+(weekStats.length-i);const color=ws.pct>=80?'#34d399':ws.pct>=50?'#38bdf8':'#fb923c';return`<div class="week-row"><div class="week-label">${label}</div><div class="week-bar-wrap"><div class="week-bar-fill" style="width:${ws.pct}%;background:${color}"></div></div><div class="week-pct-label" style="color:${color}">${ws.pct}%</div></div>`;}).join('');
+  const db=document.getElementById('day-breakdown');const dayOrder=['mon','tue','wed','thu','sat'];const dayLabels={mon:'Mon',tue:'Tue',wed:'Wed',thu:'Thu',sat:'Sat'};const dayNames={mon:'Heavy Legs',tue:'Chest + Shoulders',wed:'Legs + Power',thu:'Shoulders + Arms',sat:'Optional'};const dayDates=getDaysInWeek(thisWeekStart);
+  db.innerHTML=dayOrder.map(dk=>{const dateStr=dayDates.find(d=>getDayKey(d)===dk);const done=dateStr?countDoneSets(dk,dateStr):0;const total=DAY_TOTALS[dk];const pct=Math.round((done/total)*100);const color=pct>=80?'#34d399':pct>=50?'#38bdf8':pct>0?'#fb923c':'rgba(255,255,255,0.15)';return`<div class="db-row"><div class="db-day" style="color:${color};font-weight:500">${dayLabels[dk]}</div><div class="db-name">${dayNames[dk]}</div><div class="db-bar-wrap"><div class="db-bar-fill" style="width:${pct}%;background:${color}"></div></div><div class="db-pct" style="color:${color}">${pct}%</div><div class="db-sets">${done}/${total}</div></div>`;}).join('');
+  populateExSelector();renderWeightChart();
+}
+function renderExercises(day){const container=document.getElementById(day+'-exercises');if(!container)return;sessionLog=loadSession(day,getTodayStr());container.innerHTML=(WORKOUTS[day]||[]).map(ex=>renderExBlock(day,ex)).join('');}
+function renderExBlock(day,ex){
+  const last=getLastSession(ex.id);
+  const lastHtml=last?`<div class="last-session"><i class="ti ti-history"></i> Last: ${last.summary}</div>`:'';
+  const supersetHtml=ex.superset?`<div class="superset-tag">Superset ${ex.superset} — no rest</div>`:'';
+  let setsHtml=`<div class="sets-header"><span>#</span><span>Reps</span><span>${ex.bodyweight?'BW/lbs':'lbs'}</span><span></span></div>`;
+  for(let s=0;s<ex.sets;s++){const key=ex.id+'-s'+s,entry=sessionLog[key]||{};setsHtml+=`<div class="set-row" id="row-${key}"><span class="set-num">${s+1}</span><input class="set-input" type="number" inputmode="numeric" placeholder="${ex.timed?'sec':'reps'}" value="${entry.reps||''}" onchange="logSet('${day}','${ex.id}',${s},'reps',this.value)"/><input class="set-input" type="number" inputmode="decimal" placeholder="${ex.bodyweight?'BW':'lbs'}" value="${entry.weight||''}" onchange="logSet('${day}','${ex.id}',${s},'weight',this.value)"/><div class="set-check ${entry.done?'done':''}" onclick="toggleDone('${day}','${ex.id}',${s})"><i class="ti ti-check"></i></div></div>`;}
+  return`<div class="ex-block"><div class="ex-top"><div class="ex-top-left"><div class="ex-name">${ex.name}</div><a class="vid-btn" href="${ytUrl(ex.ytQuery)}" target="_blank" rel="noopener"><i class="ti ti-brand-youtube"></i> Form</a></div><div class="ex-target">${ex.target}</div></div>${supersetHtml}<div class="ex-note-txt">${ex.note}</div>${lastHtml}${setsHtml}</div>`;
+}
 function logSet(day,exId,setIdx,field,value){const key=exId+'-s'+setIdx;if(!sessionLog[key])sessionLog[key]={};sessionLog[key][field]=value;saveSession(day);}
 function toggleDone(day,exId,setIdx){const key=exId+'-s'+setIdx;if(!sessionLog[key])sessionLog[key]={};sessionLog[key].done=!sessionLog[key].done;const el=document.querySelector('#row-'+key+' .set-check');if(el)el.classList.toggle('done',sessionLog[key].done);saveSession(day);const ex=Object.values(WORKOUTS).flat().find(e=>e.id===exId);if(ex){const allDone=Array.from({length:ex.sets},(_,i)=>sessionLog[exId+'-s'+i]?.done).every(Boolean);if(allDone){const parts=Array.from({length:ex.sets},(_,i)=>{const e=sessionLog[exId+'-s'+i]||{};return(e.reps||'—')+'@'+(e.weight?e.weight+'lbs':'BW');});saveLastSession(exId,{summary:parts.join(' / ')});}}}
 let timerIntervals={};
 function startTimer(day,seconds){if(timerIntervals[day])clearInterval(timerIntervals[day]);const el=document.getElementById('timer-'+day);let remaining=seconds;el.style.color='#f0f4ff';el.textContent=formatTime(remaining);timerIntervals[day]=setInterval(()=>{remaining--;if(remaining<=0){clearInterval(timerIntervals[day]);el.textContent='Go!';el.style.color='#34d399';setTimeout(()=>{el.textContent='—';el.style.color='';},2500);}else{el.textContent=formatTime(remaining);el.style.color=remaining<=10?'#fb923c':'#f0f4ff';}},1000);}
 function formatTime(s){return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');}
 const DAY_ARRAY=['sun','mon','tue','wed','thu','fri','sat'];
-const WORKOUT_NAMES={mon:'Heavy Legs + Plyometrics',tue:'Upper Body + Core',wed:'Legs + Power',thu:'Upper Body + Grip',fri:'Sprint Training',sat:'Optional Upper Body',sun:'Rest + Recovery'};
-const WORKOUT_META={mon:'7 exercises · ~60 min',tue:'8 exercises · ~50 min',wed:'7 exercises · ~55 min',thu:'8 exercises · ~50 min',fri:'Team session',sat:'Optional · if feeling good',sun:'Rest day'};
-function toggleDay(id){const card=document.getElementById(id);const was=card.classList.contains('open');card.classList.toggle('open');if(!was)renderExercises(id.replace('day-',''));}
+const WORKOUT_NAMES={mon:'Heavy Legs + Plyometrics',tue:'Upper Body + Chest + Shoulders',wed:'Legs + Power',thu:'Upper Body + Shoulders + Forearms',fri:'Sprint Training',sat:'Optional Upper Body',sun:'Rest + Recovery'};
+const WORKOUT_META={mon:'10 exercises · ~65 min',tue:'13 exercises · ~65 min',wed:'10 exercises · ~60 min',thu:'15 exercises · ~70 min',fri:'Team session',sat:'Optional · if feeling good',sun:'Rest day'};
+function toggleDay(id){const card=document.getElementById(id),was=card.classList.contains('open');card.classList.toggle('open');if(!was)renderExercises(id.replace('day-',''));}
 function toggleMeal(id){document.getElementById(id).classList.toggle('open');}
 function switchPage(name){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.bnav-item').forEach(b=>b.classList.remove('active'));document.getElementById('page-'+name).classList.add('active');document.getElementById('bnav-'+name).classList.add('active');if(name==='progress')renderProgress();}
-function init(){const d=new Date();const dayName=DAY_ARRAY[d.getDay()];document.getElementById('today-title').textContent=WORKOUT_NAMES[dayName]||'—';document.getElementById('today-meta').innerHTML=(WORKOUT_META[dayName]||'').replace(' · ','<br>');document.getElementById('today-sub').textContent=d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});if(dayName!=='sun'&&dayName!=='fri'){const card=document.getElementById('day-'+dayName);if(card){card.classList.add('open');renderExercises(dayName);}}else if(dayName==='fri'){const card=document.getElementById('day-fri');if(card)card.classList.add('open');}}
+function init(){
+  updateSubtitles();
+  const d=new Date(),dayName=DAY_ARRAY[d.getDay()];
+  document.getElementById('today-title').textContent=WORKOUT_NAMES[dayName]||'—';
+  document.getElementById('today-meta').innerHTML=(WORKOUT_META[dayName]||'').replace(' · ','<br>');
+  document.getElementById('today-sub').textContent=d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  if(dayName!=='sun'&&dayName!=='fri'){const card=document.getElementById('day-'+dayName);if(card){card.classList.add('open');renderExercises(dayName);}}
+  else if(dayName==='fri'){const card=document.getElementById('day-fri');if(card)card.classList.add('open');}
+}
 init();
 </script>
 </body>
